@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFSul - Cadastro de Problemas</title>
+    <!-- Inclusão do cabeçalho, que pode conter links de CSS e scripts -->
+    <%- include('partials/header'); %>
+</head>
+<body>
+    <!-- Corpo do conteúdo -->
+    <div>
+        <center>
+            <br />
+            <br />
+            <h2>Escolha uma das opções abaixo:</h2>
+            <br />
+        </center>        
+    </div>
+
+<!-- Botões de opções -->
+<div class="container" style="display: flex; justify-content: center; align-items: center; gap: 20px; height: 120px;">
+    <div class="box" style="flex: 0; padding: 10px;">
+        <center>
+            <a href="./ideia/cadastroideia">
+                <button style="height: 120px; width: 220px;">Sou um cidadão ou empresa<br>e quero cadastrar<br>um problema do meu local</button>
+            </a>
+        </center>
+    </div>
+    <div class="box" style="flex: 0; padding: 10px;">
+        <center>
+            <a href="./professor/proflogin">
+                <button style="height: 120px; width: 220px;">Sou professor do IFSul<br>e quero ver um problema<br>para solucionar<br>ou cadastrar um problema</button>
+            </a>
+        </center>
+    </div>
+</div>
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+   
+    
+    
+    <!-- Inclusão do rodapé, onde você pode colocar scripts ou outras informações -->
+    <%- include('partials/footer'); %>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFSul - Cadastro de Problemas</title>
+</head>
+<body>
+    <header style="background-color: rgb(8, 220, 8); color: green; height: 150px;">
+        <div style="text-align: center;">                         
+            <h1 style="margin-top: 0px; padding-top: 20px;">CADASTRO DE PROBLEMAS DO IFSUL</h1>                        
+            <h2>Um banco de propostas para projetos de extensão</h2>                        
+        </div>
+    </header>
+    <h3>Por favor, informe os dados abaixo para cadastrar o problema:</h3>
+
+    <% if (mensagem) { %>
+    <div class="alert alert-danger">
+        <strong>Alerta!</strong> <%= mensagem %>
+    </div>
+    <% } %>
+
+    <form action="/ideia/cadastrar" method="POST">
+        <fieldset>
+            <legend>Sobre o problema:</legend>
+            <label>Descreva abaixo o problema em poucas palavras:<font color="red"><b>*</b></font></label><br>
+            <textarea name="titulo" cols="40" rows="3" required></textarea><br><br>
+            <center>
+            <div style="text-align: center;">
+                <p>Por exemplo, descreva:</p>
+                <div style="display: inline-block; text-align: left;">
+                    <ul style="margin: auto; padding-left: 20px;">
+                        <li><b>onde</b> e <b>quando</b> o problema ocorre</li>
+                        <li><b>qual</b> é o problema ou <b>como</b> este acontece</li>
+                        <li><b>quem</b> são as pessoas envolvidas/afetadas</li>
+                        <li>os prejuízos decorrentes do problema</li>
+                    </ul>
+                    <p style="color: red; text-align: center;">(máximo: 300 caracteres)</p>
+                </div>
+            </div>
+            </center>
+            <br><br>
+            <label>Suspeita da causa do problema:</label><br>
+            <textarea name="causa" cols="40" rows="4"></textarea><br><br>
+            
+            <label>Frequência da ocorrência:</label><br>
+            <input type="text" name="frequencia" size="50"><br><br>
+            
+            <label>Prazo máximo para a solução:</label><br>
+            <input type="date" name="prazo"><br><br>
+            
+            <label>Qual tipo de projeto de extensão você acha que seria útil para resolver este problema?<font color="red"><b>*</b></font></label><br>
+            <select name="tipo_projeto">
+                <option value="consultoria">Receber uma consultoria técnica</option>
+                <option value="curso">Receber um curso (de curta duração)</option>
+                <option value="evento">Receber um evento de palestras/minicursos</option>
+                <option value="novo_produto">Criar um novo produto/serviço</option>
+                <option value="melhoria">Melhorar um produto/serviço existente</option>
+                <option value="resultado">Gerar um resultado (ex. diminuir evasão escolar)</option>
+                <option value="nao_sabe">Não sei informar</option>
+            </select><br><br>
+
+            <label>Qual curso você acha que talvez possa solucionar este problema?<font color="red"><b>*</b></font></label><br>
+            <select name="curso_sugerido">
+                <option value="tads">Análise e Desenvolvimento de Sistemas</option>
+                <option value="ega">Engenharia Agronômica</option>
+                <option value="fpgl">Formação Pedagógica para Graduados não Licenciados</option>
+                <option value="ta">Tecnologia em Alimentos</option>
+            </select>
+        </fieldset>
+
+        <br>
+        <fieldset>
+            <legend>Dados para contato:</legend>
+            <p>O professor(a) que for criar um projeto de extensão para tratar este problema poderá entrar em contato com você para obter detalhes e/ou tirar dúvidas.</p>
+            
+            <label>Nome completo:<font color="red"><b>*</b></font></label><br>
+            <input type="text" name="nome" required><br><br>
+            
+            <label>Telefone:<font color="red"><b>*</b></font></label><br>
+            <input type="tel" name="telefone" required><br><br>
+            
+            <label>E-mail:<font color="red"><b>*</b></font></label><br>
+            <input type="email" name="email" required><br><br>
+
+            <label>Cidade:<font color="red"><b>*</b></font></label><br>
+            <select name="cidade">
+                <option value="bage">Bagé</option>
+                <option value="pelotas">Pelotas</option>
+                <option value="candiota">Candiota</option>
+                <option value="hulha_negra">Hulha Negra</option>
+                <option value="dom_pedrito">Dom Pedrito</option>
+                <option value="acegua">Aceguá</option>
+                <option value="santana">Santana do Livramento</option>
+            </select>
+        </fieldset>
+        
+        <br>
+        <font color="red"><b>* Campo de preenchimento obrigatório</b></font>
+        <br><br>
+        
+        <button type="submit"><h3>CADASTRAR PROBLEMA</h3></button>
+    </form>
+    
+    <br>
+    <a href="/">
+        <button>Voltar</button>
+    </a>
+
+    <footer style="height: 50px; margin-top: 50px; background-color:rgb(8, 220, 8); text-align: center;">               
+        <div style="padding-top: 15px; color:green;"><b>Criado no IFSul Campus Bagé - Daniel Morales, Prof. Alessandro Dias</b></div>
+    </footer>
+</body>
+</html>

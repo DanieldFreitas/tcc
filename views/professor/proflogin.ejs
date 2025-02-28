@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFSul - Cadastro de Problemas</title>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header style="background-color: rgb(8, 220, 8); color: green; height: 150px;">
+        <center>                        
+            <h1 style="margin-top: 0px; padding-top: 20px;">CADASTRO DE PROBLEMAS DO IFSUL</h1>                        
+            <h2>Um banco de propostas para projetos de extensão</h2>                        
+        </center>
+    </header>
+
+    <center>
+        <h3>Faça seu login:</h3>
+
+        <form action="/professor/proflogin" method="POST">
+            <table border="0">
+                <tr>
+                    <td style="width: 200px;">E-mail institucional:</td>
+                    <td><input type="email" id="email" name="email" required></td>
+                </tr>    
+                <tr>
+                    <td><br />Senha do SUAP</td>
+                    <td><input type="password" id="senha" name="senha" required></td>
+                </tr>    
+            </table>
+
+            <br />
+            <button type="submit"><h2>Entrar</h2></button>
+            <br>
+            <br>
+        </form>
+        <center>
+            <a href="/">
+                <button>Voltar</button>
+            </a>
+        </center>
+        <br>
+        <br>
+        <% if(mensagem){ %>
+        <div class="alert alert-danger">
+            <strong>Alerta!</strong> <%= mensagem %>
+        </div>
+        <% } %>
+    </center>
+
+    <br>
+    <br />
+    <br />
+    
+   
+    <!-- Rodapé -->
+    <footer style="height: 50px; margin-top: 50px; background-color:rgb(8, 220, 8); text-align: center;">               
+        <div style="padding-top: 15px; color:green;">
+            <b>Criado no IFSul Campus Bagé - Daniel Morales, Prof. Alessandro Dias</b>
+        </div>
+    </footer>
+</body>
+</html>
