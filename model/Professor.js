@@ -9,7 +9,8 @@ const Professor = conexao.define('professores', {
     },
     nome: Sequelize.STRING,
     email: Sequelize.STRING,
-    senha: Sequelize.STRING
+    senha: Sequelize.STRING,
+    curso: Sequelize.STRING
 }, {
     timestamps: false 
 });

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFSul - Cadastro de Problemas</title>
+</head>
+<body>
+    <header style="background-color: rgb(8, 220, 8); color: green; height: 150px;">
+        <center>                        
+            <h1 style="margin-top: 0px; padding-top: 20px;">CADASTRO DE PROBLEMAS DO IFSUL</h1>                        
+            <h2>Um banco de propostas para projetos de extensão</h2>                        
+        </center>
+                <style>
+                    .container {
+                    display: flex;
+                    justify-content: center; /* Alinha os itens no centro horizontalmente */
+                    align-items: center; /* Alinha os itens no centro verticalmente */
+                    gap: 40px; /* Adiciona uma separação de 40px entre as divs */
+                    height: 120px;
+                    }
+
+                    .box {
+                    flex: 1; /* As divs irão ocupar o mesmo espaço */
+                    padding: 10px;
+                    border: 0px;
+                    margin: 5px;
+                    
+                    }
+
+                </style>
+    </header>
+
+    <center>
+        <h1>ÁREA DO PROFESSOR</h1>
+        <h2>Bem-vindo, <%= professor.nome %>!</h2>
+    </center>
+
+    <div class="container">
+        <div>
+            <center>
+                <a href="problema.html">
+                    <button>
+                        <H3>LISTAR PROBLEMAS EM ABERTO<br /> NA MINHA REGIÃO</H3>
+                    </button>
+                </a>
+            </center>
+        </div>
+        <BR>
+        <div>
+            <center>
+                <a href="buscarProblema.html">
+                    <button>
+                        <H3>CONHECER PROBLEMAS <BR /> JÁ SOLUCIONADOS
+                    </button>
+                </a>
+            </center>
+        </div>
+        <BR>
+        <div>
+            <center>
+                <a href="cadastroideia.html">
+                    <button>
+                        <H3>CADASTRAR UM PROBLEMA</H3>
+                    </button>
+                </a>
+            </center>
+        </div>
+        <br>
+        <div>
+            <center>
+                <a href="./proflogin">
+                    <button>
+                        <H3>SAIR</H3>
+                    </button>
+                </a>
+            </center>
+        </div>
+    </div>
+    <br>
+    <h2>Problemas em aberto que estou resolvendo:</h2>
+    <table border="1" width="100%">
+        <thead>
+            <tr>
+                <th>Número do Problema</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (problemasEmAndamento.length > 0) { %>
+                <% problemasEmAndamento.forEach(ideia => { %>
+                    <tr>
+                        <td style="text-align: center;"># <%= ideia.id %></td>
+                        <td><%= ideia.causa %></td>
+                        <td style="text-align: center;">
+                            <button>Ver Detalhes</button>
+                            <button>Finalizar problema</button>
+                            <button>Exportar para o SUAP</button>
+                            <button>Conhecer problemas similares</button>
+                        </td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="3" style="text-align: center;">Nenhum problema em andamento.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <br>
+    <h2>Recomendações de problemas em aberto para você:</h2>
+    <table border="1" width="100%">
+        <thead>
+            <tr>
+                <th>Número do Problema</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (ideiasRecomendadas.length > 0) { %>
+                <% ideiasRecomendadas.forEach(ideia => { %>
+                    <tr>
+                        <td style="text-align: center;"># <%= ideia.id %></td>
+                        <td><%= ideia.causa %></td>
+                        <td style="text-align: center;">
+                            <form action="/professor/tratarProblema" method="post">
+                                <input type="hidden" name="idIdeia" value="<%= ideia.id %>">
+                                <button type="submit">Quero tratar este problema</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="3" style="text-align: center;">Nenhuma ideia recomendada para o seu curso.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <footer style="height: 50px; margin-top: 50px; background-color:rgb(8, 220, 8); text-align: center;">                
+        <div style="padding-top: 15px; color:green;"><b>Criado no IFSul Campus Bagé - Daniel Morales, Prof. Alessandro Dias </b></div>
+    </footer>
+</body>
+</html>

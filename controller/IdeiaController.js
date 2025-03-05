@@ -33,12 +33,14 @@ routerIdeia.post("/ideia/cadastrar", (req, res) => {
     if (!titulo || !nome || !telefone || !tipo_projeto || !curso_sugerido || !cidade) {
         return res.render("ideia/cadastroideia", { mensagem: "Todos os campos obrigatórios devem ser preenchidos." });
     }
-    
+    console.log("Chamando DAOIdeia.insert com os seguintes dados:");
+    console.log({ titulo, causa, frequencia, prazo, tipo_projeto, curso_sugerido, nome, telefone, email, cidade });
+
     DAOIdeia.insert(titulo, causa, frequencia, prazo, tipo_projeto, curso_sugerido, nome, telefone, email, cidade)
     .then(inserido => {
         if (inserido) {
             // Redirecionar para a página de sucesso ou outra ação
-            res.render("ideia/cadastrar", { mensagem: "Ideia cadastrada com sucesso!" });
+            res.render("ideia/cadastrar", { mensagem: "Ideia cadastrada com sucesso!"});
         } else {
             res.render("ideia/cadastroideia", { mensagem: "Não foi possível cadastrar a ideia." });
         }
