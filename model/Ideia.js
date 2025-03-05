@@ -15,7 +15,7 @@ const Ideia = conexao.define('ideias', {
     tipo_projeto: Sequelize.ENUM(
         'consultoria', 'curso', 'evento', 'novo_produto', 'melhoria', 'resultado', 'nao_sabe'
     ),
-    curso_sugerido: Sequelize.CHAR(
+    curso_sugerido: Sequelize.ENUM(
         'tads', 'ega', 'fpgl', 'ta'
     ),
     nome: Sequelize.STRING,
@@ -41,5 +41,9 @@ Professor.hasMany(Ideia, { foreignKey: 'curso_sugerido', sourceKey: 'curso' });
 
 // Sincroniza o modelo com a tabela no banco
 Ideia.sync({ force: false });
+
+Ideia.beforeCreate((ideia) => {
+    console.log("[Model Ideia] Tentando inserir:", ideia.toJSON());
+});
 
 module.exports = Ideia;

@@ -6,7 +6,9 @@ const DAOIdeia = {
     insert: async (titulo, causa, frequencia, prazo, tipo_projeto, curso_sugerido, nome, telefone, email, cidade) => {
         try {
             console.log("[DAOIdeia] Tentando inserir no banco...");
-            console.log({ titulo, causa, frequencia, prazo, tipo_projeto, curso_sugerido, nome, telefone, email, cidade });
+            console.log("[DAOIdeia] Dados recebidos:", JSON.stringify({
+                titulo, causa, frequencia, prazo, tipo_projeto, curso_sugerido, nome, telefone, email, cidade
+            }, null, 2));
             
             const novaIdeia = await Ideia.create({
                 titulo,
