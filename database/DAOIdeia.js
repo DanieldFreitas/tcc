@@ -2,16 +2,11 @@ const Ideia = require('../model/Ideia');
 const Professor = require('../model/Professor');
 
 const DAOIdeia = {
-    // Método para inserir uma nova ideia no banco de dados
-    insert: async (titulo, causa, frequencia, prazo, tipo_projeto, curso_sugerido, nome, telefone, email, cidade) => {
+    insert: async (titulo, detalhes, causa, frequencia, prazo, tipo_projeto, curso_sugerido, nome, telefone, email, cidade) => {
         try {
-            console.log("[DAOIdeia] Tentando inserir no banco...");
-            console.log("[DAOIdeia] Dados recebidos:", JSON.stringify({
-                titulo, causa, frequencia, prazo, tipo_projeto, curso_sugerido, nome, telefone, email, cidade
-            }, null, 2));
-            
-            const novaIdeia = await Ideia.create({
+            return await Ideia.create({
                 titulo,
+                detalhes,
                 causa,
                 frequencia,
                 prazo,
@@ -21,19 +16,14 @@ const DAOIdeia = {
                 telefone,
                 email,
                 cidade,
-                status: 'pendente'  // A ideia começa com status "pendente"
+                status: 'pendente'
             });
-            
-            console.log("[DAOIdeia] Ideia inserida com sucesso:", novaIdeia.toJSON());
-            return novaIdeia;
         } catch (error) {
-            console.error("[DAOIdeia] Erro ao inserir ideia:", error.message);
-            console.error("[DAOIdeia] Detalhes do erro:", error);
+            console.error("[DAOIdeia] Erro ao inserir ideia:", error);
             return null;
         }
     },
 
-    // Método para buscar todas as ideias cadastradas
     getAll: async () => {
         try {
             return await Ideia.findAll();
@@ -43,21 +33,10 @@ const DAOIdeia = {
         }
     },
 
-    // Método para buscar uma ideia pelo ID
-    getOne: async (id) => {
-        try {
-            return await Ideia.findByPk(id);
-        } catch (error) {
-            console.error("[DAOIdeia] Erro ao buscar ideia:", error);
-            return null;
-        }
-    },
-
-    // Método para buscar ideias filtradas pelo curso do professor
     getByCurso: async (curso) => {
         try {
             return await Ideia.findAll({
-                where: { curso_sugerido: curso, status: 'pendente' }
+                where: { curso_sugerido: curso, status: 'pendente', professorId: null }
             });
         } catch (error) {
             console.error("[DAOIdeia] Erro ao buscar ideias pelo curso:", error);
@@ -65,73 +44,72 @@ const DAOIdeia = {
         }
     },
 
-    // Método para buscar as ideias "em andamento" associadas a um professor
     getEmAndamentoByProfessor: async (professorId) => {
         try {
-            const professor = await Professor.findByPk(professorId);
-            if (!professor) return [];
-
             return await Ideia.findAll({
-                where: {
-                    curso_sugerido: professor.curso,
-                    status: 'tratando'
-                },
-                include: [{
-                    model: Professor, 
-                    attributes: ['id', 'nome']
-                }]
+                where: { professorId, status: 'tratando' }
             });
         } catch (error) {
-            console.error("[DAOIdeia] Erro ao buscar ideias em andamento do professor:", error);
+            console.error("[DAOIdeia] Erro ao buscar ideias em andamento:", error);
             return [];
         }
     },
 
-    // Método para atualizar uma ideia existente
-    update: async (id, titulo, causa, frequencia, prazo, tipo_projeto, curso_sugerido, nome, telefone, email, cidade) => {
-        try {
-            const ideiaAtualizada = await Ideia.update({
-                titulo,
-                causa,
-                frequencia,
-                prazo,
-                tipo_projeto,
-                curso_sugerido,
-                nome,
-                telefone,
-                email,
-                cidade
-            }, {
-                where: { id }
-            });
-            return ideiaAtualizada[0] > 0;
-        } catch (error) {
-            console.error("[DAOIdeia] Erro ao atualizar ideia:", error);
-            return false;
-        }
-    },
-
-    // Método para excluir uma ideia
-    delete: async (id) => {
-        try {
-            const deletado = await Ideia.destroy({ where: { id } });
-            return deletado > 0;
-        } catch (error) {
-            console.error("[DAOIdeia] Erro ao excluir ideia:", error);
-            return false;
-        }
-    },
-
-    // Método para marcar uma ideia como "em progresso"
-    markAsInProgress: async (id) => {
+    markAsInProgress: async (idIdeia, idProfessor) => {
         try {
             const ideiaAtualizada = await Ideia.update(
-                { status: 'tratando' },
-                { where: { id } }
+                { status: 'tratando', professorId: idProfessor },
+                { where: { id: idIdeia, status: 'pendente' } }
             );
             return ideiaAtualizada[0] > 0;
         } catch (error) {
             console.error("[DAOIdeia] Erro ao marcar ideia como em progresso:", error);
+            return false;
+        }
+    },
+
+    getById: async (id) => { // NOVA FUNÇÃO
+        try {
+            return await Ideia.findByPk(id);
+        } catch (error) {
+            console.error("[DAOIdeia] Erro ao buscar ideia por ID:", error);
+            return null;
+        }
+    },
+
+    update: async (id, titulo, detalhes, causa, frequencia, prazo, tipo_projeto, curso_sugerido, nome, telefone, email, cidade) => {
+        try {
+            const ideia = await Ideia.findByPk(id);
+            if (!ideia) return null; // Se não encontrar a ideia
+
+            // Atualizar os campos
+            ideia.titulo = titulo;
+            ideia.detalhes = detalhes;
+            ideia.causa = causa;
+            ideia.frequencia = frequencia;
+            ideia.prazo = prazo;
+            ideia.tipo_projeto = tipo_projeto;
+            ideia.curso_sugerido = curso_sugerido;
+            ideia.nome = nome;
+            ideia.telefone = telefone;
+            ideia.email = email;
+            ideia.cidade = cidade;
+
+            // Salvar a ideia atualizada
+            await ideia.save();
+            return ideia;
+        } catch (error) {
+            console.error("[DAOIdeia] Erro ao atualizar ideia:", error);
+            return null;
+        }
+    },
+
+    delete: async (id) => {
+        try {
+            const resultado = await Ideia.destroy({ where: { id } });
+            return resultado > 0;
+        } catch (error) {
+            console.error("[DAOIdeia] Erro ao excluir ideia:", error);
             return false;
         }
     }

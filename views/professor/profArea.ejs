@@ -82,8 +82,8 @@
     <table border="1" width="100%">
         <thead>
             <tr>
-                <th>Número do Problema</th>
-                <th>Descrição</th>
+                <th style="width: 150px;">Número do Problema</th>
+                <th style="width: 600px;">Descrição</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -92,9 +92,13 @@
                 <% problemasEmAndamento.forEach(ideia => { %>
                     <tr>
                         <td style="text-align: center;"># <%= ideia.id %></td>
-                        <td><%= ideia.causa %></td>
+                        <td><%= ideia.titulo %></td>
                         <td style="text-align: center;">
-                            <button>Ver Detalhes</button>
+
+                            <a href="/professor/detalheProblema/<%= ideia.id %>">
+                                <button>Ver Detalhes</button>
+                            </a>
+
                             <button>Finalizar problema</button>
                             <button>Exportar para o SUAP</button>
                             <button>Conhecer problemas similares</button>
@@ -114,8 +118,8 @@
     <table border="1" width="100%">
         <thead>
             <tr>
-                <th>Número do Problema</th>
-                <th>Descrição</th>
+                <th style="width: 150px;">Número do Problema</th>
+                <th style="width: 600px;">Descrição</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -124,12 +128,15 @@
                 <% ideiasRecomendadas.forEach(ideia => { %>
                     <tr>
                         <td style="text-align: center;"># <%= ideia.id %></td>
-                        <td><%= ideia.causa %></td>
+                        <td><%= ideia.titulo %></td>
                         <td style="text-align: center;">
                             <form action="/professor/tratarProblema" method="post">
                                 <input type="hidden" name="idIdeia" value="<%= ideia.id %>">
                                 <button type="submit">Quero tratar este problema</button>
                             </form>
+                            <a href="/professor/detalheProblema/<%= ideia.id %>">
+                                <button>Ver Detalhes</button>
+                            </a>                            
                         </td>
                     </tr>
                 <% }); %>

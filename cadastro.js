@@ -5,8 +5,8 @@ const bcrypt = require('bcryptjs');  // Para criptografar a senha
 
 async function cadastrarProfessor() {
     // Dados do professor que você quer cadastrar
-    const nome = 'Professor teste';
-    const email = 'test@professor';
+    const nome = 'Professor Daniel';
+    const email = 'daniel@professor';
     const senha = '1234';
     const curso = 'tads'  // A senha que o professor usa no SUAP
 

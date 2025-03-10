@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const conexao = require('../database/conexao');
-const Professor = require('./Professor'); // Importando o modelo Professor
+const Professor = require('./Professor');
 
 const Ideia = conexao.define('ideias', {
     id: {
@@ -9,6 +9,7 @@ const Ideia = conexao.define('ideias', {
         autoIncrement: true
     },
     titulo: Sequelize.STRING,
+    detalhes: Sequelize.STRING,
     causa: Sequelize.STRING,
     frequencia: Sequelize.STRING,
     prazo: Sequelize.DATEONLY,
@@ -27,23 +28,20 @@ const Ideia = conexao.define('ideias', {
     status: {
         type: Sequelize.ENUM('pendente', 'tratando', 'finalizado'),
         defaultValue: 'pendente'
+    },
+    professorId: { 
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+            model: Professor,
+            key: 'id'
+        }
     }
 });
 
-// Estabelecendo o relacionamento entre Ideia e Professor.
-Ideia.belongsTo(Professor, {
-    foreignKey: 'curso_sugerido',
-    targetKey: 'curso',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
-Professor.hasMany(Ideia, { foreignKey: 'curso_sugerido', sourceKey: 'curso' });
+Professor.hasMany(Ideia, { foreignKey: 'professorId' });
+Ideia.belongsTo(Professor, { foreignKey: 'professorId' });
 
-// Sincroniza o modelo com a tabela no banco
 Ideia.sync({ force: false });
-
-Ideia.beforeCreate((ideia) => {
-    console.log("[Model Ideia] Tentando inserir:", ideia.toJSON());
-});
 
 module.exports = Ideia;

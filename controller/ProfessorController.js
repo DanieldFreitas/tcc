@@ -4,112 +4,75 @@ const DAOProfessor = require('../database/DAOProfessor');
 const DAOIdeia = require('../database/DAOIdeia');
 const bcrypt = require('bcryptjs');
 
-// Rota para login do professor
 routerProfessor.get("/professor/proflogin", (req, res) => {
     res.render("professor/proflogin", { mensagem: "" });
 });
 
 routerProfessor.post("/professor/proflogin", async function (req, res) {
     let { email, senha } = req.body;
-
     try {
         let professor = await DAOProfessor.login(email, senha);
-
-        if (professor) {
-            if (bcrypt.compareSync(senha, professor.senha)) {
-                // Armazena as informações do professor na sessão
-                req.session.professor = { 
-                    id: professor.id, 
-                    nome: professor.nome, 
-                    email: professor.email, 
-                    curso: professor.curso 
-                };
-
-                // Buscar ideias recomendadas para o professor baseado no curso
-                let ideiasRecomendadas = await DAOIdeia.getByCurso(professor.curso);
-
-                // Buscar as ideias "em andamento" (tratando) para o professor
-                let problemasEmAndamento = await DAOIdeia.getEmAndamentoByProfessor(professor.id);
-
-                // Garantir que problemasEmAndamento seja um array vazio se não houver ideias
-                if (!problemasEmAndamento || problemasEmAndamento.length === 0) {
-                    problemasEmAndamento = [];
-                }
-
-                res.render("professor/profArea", { 
-                    professor: professor, 
-                    ideiasRecomendadas: ideiasRecomendadas,
-                    problemasEmAndamento: problemasEmAndamento // Passando as ideias em andamento
-                });
-            } else {
-                res.render("professor/proflogin", { mensagem: "Usuário ou senha inválidos." });
-            }
+        if (professor && bcrypt.compareSync(senha, professor.senha)) {
+            req.session.professor = { id: professor.id, nome: professor.nome, email: professor.email, curso: professor.curso };
+            let ideiasRecomendadas = await DAOIdeia.getByCurso(professor.curso);
+            let problemasEmAndamento = await DAOIdeia.getEmAndamentoByProfessor(professor.id);
+            res.render("professor/profArea", { professor, ideiasRecomendadas, problemasEmAndamento });
         } else {
             res.render("professor/proflogin", { mensagem: "Usuário ou senha inválidos." });
         }
     } catch (err) {
         console.error(err);
-        res.render("professor/proflogin", { mensagem: "Erro ao autenticar, tente novamente" });
+        res.render("professor/proflogin", { mensagem: "Erro ao autenticar." });
     }
 });
 
-// Rota para marcar a ideia como "em andamento" (tratando)
 routerProfessor.post("/professor/tratarProblema", async (req, res) => {
     let { idIdeia } = req.body;
-
+    if (!req.session.professor) return res.redirect("/professor/proflogin");
     try {
-        // Marcar a ideia como em andamento
-        const resultado = await DAOIdeia.markAsInProgress(idIdeia);
-
-        if (resultado) {
-            res.redirect("/professor/profArea");  // Redireciona para a área do professor
-        } else {
-            res.render("professor/profArea", { mensagem: "Erro ao tratar o problema." });
-        }
+        const resultado = await DAOIdeia.markAsInProgress(idIdeia, req.session.professor.id);
+        res.redirect("/professor/profArea");
     } catch (err) {
         console.error(err);
         res.render("professor/profArea", { mensagem: "Erro ao tratar o problema." });
     }
 });
 
-// Rota para exibir a área do professor com suas ideias pendentes e em andamento
 routerProfessor.get("/professor/profArea", async (req, res) => {
-    // Verifica se o professor está logado
-    if (!req.session.professor) {
-        return res.redirect("/professor/proflogin");
-    }
-
-    let professor = req.session.professor;
-    
+    if (!req.session.professor) return res.redirect("/professor/proflogin");
     try {
-        // Buscar ideias recomendadas para o professor baseado no curso
+        let professor = req.session.professor;
         let ideiasRecomendadas = await DAOIdeia.getByCurso(professor.curso);
-
-        // Buscar as ideias em andamento para o professor
         let problemasEmAndamento = await DAOIdeia.getEmAndamentoByProfessor(professor.id);
-
-        // Garantir que problemasEmAndamento seja um array vazio se não houver ideias
-        if (!problemasEmAndamento || problemasEmAndamento.length === 0) {
-            problemasEmAndamento = [];
-        }
-
-        res.render("professor/profArea", {
-            professor: professor,
-            ideiasRecomendadas: ideiasRecomendadas,
-            problemasEmAndamento: problemasEmAndamento // Passando as ideias em andamento
-        });
+        res.render("professor/profArea", { professor, ideiasRecomendadas, problemasEmAndamento });
     } catch (err) {
         console.error(err);
         res.render("professor/profArea", { mensagem: "Erro ao carregar as ideias." });
     }
 });
 
-// Rota para fazer logout do professor
-routerProfessor.get("/professor/logout", (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            return res.status(500).send("Erro ao encerrar a sessão.");
+routerProfessor.get("/professor/detalheProblema/:id", async (req, res) => {
+    if (!req.session.professor) return res.redirect("/professor/profArea");
+
+    let { id } = req.params;
+    try {
+        let problema = await DAOIdeia.getById(id);
+        if (!problema) {
+            return res.render("ideia/detalheproblema", { professor: req.session.professor, mensagem: "Problema não encontrado.", problema: null });
         }
+
+        res.render("ideia/detalheproblema", { professor: req.session.professor, problema, mensagem: "" });
+    } catch (err) {
+        console.error(err);
+        res.render("ideia/detalheproblema", { professor: req.session.professor, mensagem: "Erro ao carregar os detalhes do problema.", problema: null });
+    }
+});
+
+
+
+routerProfessor.get("/professor/logout", (req, res) => {
+    req.session.destroy(err => {
+        if (err) return res.status(500).send("Erro ao encerrar a sessão.");
         res.redirect("/professor/proflogin");
     });
 });
