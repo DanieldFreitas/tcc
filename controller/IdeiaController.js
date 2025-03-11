@@ -28,6 +28,8 @@ routerIdeia.get("/ideia/editarproblema/:id", (req, res) => {
     const { id } = req.params;
     DAOIdeia.getById(id).then(ideia => {
         if (ideia) {
+            // Verifique se o objeto 'ideia' está correto no console
+            console.log(ideia);
             res.render("ideia/editarproblema", { ideia });
         } else {
             res.send("Ideia não encontrada");
@@ -71,6 +73,5 @@ routerIdeia.post("/ideia/excluir/:id", (req, res) => {
         res.send("Erro ao excluir ideia");
     });
 });
-
 
 module.exports = routerIdeia;
