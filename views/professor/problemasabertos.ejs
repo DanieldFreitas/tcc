@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFSul - Cadastro de Problemas</title>
+</head>
+<body>
+   
+    <header style="background-color: rgb(8, 220, 8); color: green; height: 150px;">
+        <center>                         
+            <h1 style="margin-top: 0px; padding-top: 20px;">CADASTRO DE PROBLEMAS DO IFSUL</h1>                         
+            <h2>Um banco de propostas para projetos de extensão</h2>                         
+        </center>
+        <style>
+            .container {
+                display: flex;
+                justify-content: center; /* Alinha os itens no centro horizontalmente */
+                align-items: center; /* Alinha os itens no centro verticalmente */
+                gap: 40px; /* Adiciona uma separação de 40px entre as divs */
+                height: 120px;
+            }
+
+            .box {
+                flex: 1; /* As divs irão ocupar o mesmo espaço */
+                padding: 10px;
+                border: 0px;
+                margin: 5px;
+            }
+        </style>
+    </header>
+
+    <h2>Problemas em aberto na minha região:</h2>
+
+    <table border="1" width="100%">
+        <thead>
+            <tr>
+                <th style="width: 150px;">Número do Problema</th>
+                <th style="width: 150px;">Cidade</th>
+                <th style="width: 600px;">Descrição</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (problemasAbertos.length > 0) { %>
+                <% problemasAbertos.forEach(ideia => { %>
+                    <tr>
+                        <td style="text-align: center;"># <%= ideia.id %></td>
+                        <td><%= ideia.cidade %></td>
+                        <td><%= ideia.titulo %></td>
+                        <td style="text-align: center;">
+                            <form action="/professor/tratarProblema" method="post">
+                                <input type="hidden" name="idIdeia" value="<%= ideia.id %>">
+                                <button type="submit">Quero tratar este problema</button>
+                            </form>
+                            <a href="/professor/detalheProblema/<%= ideia.id %>">
+                                <button>Ver Detalhes</button>
+                            </a>                            
+                        </td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="3" style="text-align: center;">Nenhuma ideia recomendada para o seu curso.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+    <br>
+
+    <a href="profArea">
+        <button><h3>voltar</h3></button>
+    </a>
+
+    <footer style="height: 50px; margin-top: 50px; background-color:rgb(8, 220, 8); text-align: center;" >               
+        <div style="padding-top: 15px; color:green;"><b>Criado no IFSul Campus Bagé - Daniel Morales, Prof. Alessandro Dias </b></div>
+    </footer>
+
+</body>  
+</html>

@@ -26,7 +26,9 @@ const DAOIdeia = {
 
     getAll: async () => {
         try {
-            return await Ideia.findAll();
+            return await Ideia.findAll({
+                where: { status: 'pendente', professorId: null } // Só ideias pendentes e sem professor atribuído
+            });
         } catch (error) {
             console.error("[DAOIdeia] Erro ao buscar ideias:", error);
             return null;
