@@ -9,7 +9,7 @@ routerProfessor.get("/professor/proflogin", (req, res) => {
     res.render("professor/proflogin", { mensagem: "" });
 });
 
-routerProfessor.post("/professor/proflogin", async function (req, res) {
+routerProfessor.post("/professor/proflogin", async (req, res) => {
     let { email, senha } = req.body;
     try {
         let professor = await DAOProfessor.login(email, senha);
@@ -69,20 +69,47 @@ routerProfessor.get("/professor/detalheProblema/:id", async (req, res) => {
     }
 });
 
-// Nova rota para listar problemas em aberto
+// Rota para listar problemas em aberto
 routerProfessor.get("/professor/problemasabertos", async (req, res) => {
     if (!req.session.professor) return res.redirect("/professor/proflogin");
     try {
-        // Buscar as ideias com status 'pendente' e sem professor atribuído
-        let problemasAbertos = await DAOIdeia.getAll({
-            where: { status: 'pendente', professorId: null }
-        });
+        let problemasAbertos = await DAOIdeia.getPendentes();
         res.render("professor/problemasabertos", { professor: req.session.professor, problemasAbertos });
     } catch (err) {
         console.error(err);
         res.render("professor/problemasabertos", { professor: req.session.professor, mensagem: "Erro ao carregar os problemas em aberto.", problemasAbertos: [] });
     }
 });
+
+// Rota para exibir a página de finalização de problemas
+routerProfessor.get("/professor/finalizarproblemas/:id", async (req, res) => {
+    if (!req.session.professor) return res.redirect("/professor/profArea");
+    try {
+        let problema = await DAOIdeia.getById(req.params.id);
+        if (!problema) {
+            return res.render("ideia/finalizarproblemas", { professor: req.session.professor, mensagem: "Problema não encontrado.", problema: null });
+        }
+        res.render("ideia/finalizarproblemas", { professor: req.session.professor, ideia: problema, mensagem: "" }); // Passando "ideia" ao invés de "problema"
+    } catch (err) {
+        console.error(err);
+        res.render("ideia/finalizarproblemas", { professor: req.session.professor, mensagem: "Erro ao carregar os detalhes do problema.", problema: null });
+    }
+});
+
+
+// Rota para finalizar um problema
+routerProfessor.post("/professor/finalizarproblemas", async (req, res) => {
+    let { idIdeia, descricaoFinalizacao } = req.body;
+    if (!req.session.professor) return res.redirect("/professor/proflogin");
+    try {
+        await DAOIdeia.finalizarProblemas(idIdeia, descricaoFinalizacao);
+        res.redirect("/professor/profArea");
+    } catch (err) {
+        console.error(err);
+        res.render("professor/profArea", { mensagem: "Erro ao finalizar o problema." });
+    }
+});
+
 // Rota para logout do professor
 routerProfessor.get("/professor/logout", (req, res) => {
     req.session.destroy(err => {

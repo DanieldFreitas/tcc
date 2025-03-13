@@ -28,8 +28,6 @@ routerIdeia.get("/ideia/editarproblema/:id", (req, res) => {
     const { id } = req.params;
     DAOIdeia.getById(id).then(ideia => {
         if (ideia) {
-            // Verifique se o objeto 'ideia' está correto no console
-            console.log(ideia);
             res.render("ideia/editarproblema", { ideia });
         } else {
             res.send("Ideia não encontrada");
@@ -48,7 +46,6 @@ routerIdeia.post("/ideia/atualizar/:id", (req, res) => {
     DAOIdeia.update(id, titulo, detalhes, causa, frequencia, prazo, tipo_projeto, curso_sugerido, nome, telefone, email, cidade)
         .then(ideiaAtualizada => {
             if (ideiaAtualizada) {
-                // Redireciona para a página de detalhes após a atualização
                 res.redirect(`/professor/detalheproblema/${id}`);
             } else {
                 res.render("ideia/editarproblema", { mensagem: "Não foi possível atualizar a ideia." });
@@ -64,7 +61,7 @@ routerIdeia.post("/ideia/excluir/:id", (req, res) => {
     const { id } = req.params;
     DAOIdeia.delete(id).then(excluido => {
         if (excluido) {
-            res.redirect("/professor/profArea");  // Redireciona para a lista de ideias
+            res.redirect("/professor/profArea");
         } else {
             res.send("Não foi possível excluir a ideia.");
         }
@@ -72,6 +69,25 @@ routerIdeia.post("/ideia/excluir/:id", (req, res) => {
         console.error("Erro ao excluir ideia:", err);
         res.send("Erro ao excluir ideia");
     });
+});
+
+// Rota para finalizar um projeto
+routerIdeia.post("/ideia/finalizarproblemas/:id", async (req, res) => {
+    if (!req.session.professor) return res.redirect("/professor/proflogin"); // Verifica se o professor está logado
+    const { id } = req.params;
+    const { descricaoFinalizacao } = req.body;
+    
+    try {
+        const sucesso = await DAOIdeia.finalizarProblemas(id, descricaoFinalizacao);
+        if (sucesso) {
+            res.redirect("/professor/profArea"); // Redireciona para a área do professor após finalizar
+        } else {
+            res.render("professor/finalizarProjeto", { mensagem: "Não foi possível finalizar o projeto." });
+        }
+    } catch (err) {
+        console.error("Erro ao finalizar o projeto:", err);
+        res.render("professor/finalizarProjeto", { mensagem: "Erro ao finalizar o projeto." });
+    }
 });
 
 module.exports = routerIdeia;

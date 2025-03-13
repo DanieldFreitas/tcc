@@ -29,6 +29,10 @@ const Ideia = conexao.define('ideias', {
         type: Sequelize.ENUM('pendente', 'tratando', 'finalizado'),
         defaultValue: 'pendente'
     },
+    descricaoFinalizacao: {  // Nova coluna para armazenar a descrição da solução
+        type: Sequelize.TEXT,
+        allowNull: true // Pode ser nulo caso o professor ainda não tenha finalizado
+    },
     professorId: { 
         type: Sequelize.INTEGER,
         allowNull: true,

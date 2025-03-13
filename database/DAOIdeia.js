@@ -24,7 +24,7 @@ const DAOIdeia = {
         }
     },
 
-    getAll: async () => {
+    getPendentes: async () => {
         try {
             return await Ideia.findAll({
                 where: { status: 'pendente', professorId: null } // Só ideias pendentes e sem professor atribuído
@@ -70,7 +70,7 @@ const DAOIdeia = {
         }
     },
 
-    getById: async (id) => { // NOVA FUNÇÃO
+    getById: async (id) => {
         try {
             return await Ideia.findByPk(id);
         } catch (error) {
@@ -112,6 +112,19 @@ const DAOIdeia = {
             return resultado > 0;
         } catch (error) {
             console.error("[DAOIdeia] Erro ao excluir ideia:", error);
+            return false;
+        }
+    },
+
+    finalizarProblemas: async (idIdeia, descricaoFinalizacao) => {
+        try {
+            const ideiaAtualizada = await Ideia.update(
+                { status: 'finalizado', descricaoFinalizacao },
+                { where: { id: idIdeia, status: 'tratando' } }
+            );
+            return ideiaAtualizada[0] > 0;
+        } catch (error) {
+            console.error("[DAOIdeia] Erro ao finalizar o projeto:", error);
             return false;
         }
     }
