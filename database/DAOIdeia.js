@@ -116,18 +116,62 @@ const DAOIdeia = {
         }
     },
 
-    finalizarProblemas: async (idIdeia, descricaoFinalizacao) => {
+    // Buscar problemas finalizados apenas do professor logado
+    getFinalizadosByProfessor: async (professorId) => {
         try {
-            const ideiaAtualizada = await Ideia.update(
-                { status: 'finalizado', descricaoFinalizacao },
-                { where: { id: idIdeia, status: 'tratando' } }
-            );
-            return ideiaAtualizada[0] > 0;
+            return await Ideia.findAll({
+                where: { professorId, status: 'finalizado' }
+            });
+        } catch (error) {
+            console.error("[DAOIdeia] Erro ao buscar histórico de problemas finalizados:", error);
+            return [];
+        }
+    },
+    // Buscar todos os problemas finalizados
+    getFinalizados: async () => {
+        try {
+            const problemasFinalizados = await Ideia.findAll({
+                where: { status: 'finalizado' },
+                include: [{
+                    model: Professor,
+                    as: 'professor', // Alias correto, conforme a associação
+                    attributes: ['id', 'nome']
+                }]
+            });
+            return problemasFinalizados;
+        } catch (error) {
+            console.error("[DAOIdeia] Erro ao buscar todos os problemas finalizados:", error);
+            return [];
+        }
+    },
+    
+    finalizarProblemas: async (idIdeia, descricaoFinalizacao, professorId) => {
+        try {
+            const ideia = await Ideia.findByPk(idIdeia);
+            if (!ideia) {
+                console.log("[DAOIdeia] Ideia não encontrada.");
+                return null;
+            }
+    
+            if (ideia.status !== 'tratando') {
+                console.log("[DAOIdeia] Ideia não está no status 'tratando'.");
+                return null;
+            }
+    
+            // Atualiza os dados da ideia
+            ideia.status = 'finalizado';
+            ideia.descricaoFinalizacao = descricaoFinalizacao;
+            ideia.professorId = professorId;
+    
+            await ideia.save(); // Salva as alterações
+    
+            return ideia; // Retorna a ideia atualizada
         } catch (error) {
             console.error("[DAOIdeia] Erro ao finalizar o projeto:", error);
-            return false;
+            return null;
         }
     }
+    
 };
 
 module.exports = DAOIdeia;

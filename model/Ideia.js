@@ -43,8 +43,9 @@ const Ideia = conexao.define('ideias', {
     }
 });
 
-Professor.hasMany(Ideia, { foreignKey: 'professorId' });
-Ideia.belongsTo(Professor, { foreignKey: 'professorId' });
+Professor.hasMany(Ideia, { foreignKey: 'professorId', as: 'ideias' });
+Ideia.belongsTo(Professor, { foreignKey: 'professorId', as: 'professor' });
+
 
 Ideia.sync({ force: false });
 

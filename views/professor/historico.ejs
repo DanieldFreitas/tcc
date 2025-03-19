@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Problemas Finalizados</title>
+</head>
+<body>
+    <header style="background-color: rgb(8, 220, 8); color: green; height: 150px;">
+        <center>                        
+            <h1 style="margin-top: 0px; padding-top: 20px;">HISTÓRICO DE PROBLEMAS FINALIZADOS</h1>                        
+            <h2>Lista de problemas solucionados pelo professor</h2>                        
+        </center>
+    </header>
+    
+    <h2>Seus problemas já solucionados:</h2>
+
+    <table border="1" width="100%">
+        <thead>
+            <tr style="height: 40px;">
+                <th>Cidade</th>
+                <th>Curso que solucionou</th>
+                <th>Descrição do Problema</th>
+                <th>Suspeita da Causa</th>
+                <th>Data de Finalização</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (problemasFinalizados.length > 0) { %>
+                <% problemasFinalizados.forEach(ideia => { %>
+                    <tr style="height: 60px;">
+                        <td><%= ideia.cidade %></td>
+                        <td><%= ideia.curso_sugerido %></td>
+                        <td><%= ideia.titulo %></td>
+                        <td><%= ideia.causa %></td>
+                        <td><%= ideia.updatedAt.toLocaleDateString() %></td>
+                        <td style="text-align: center;">
+                            <form action="/professor/versolucao/<%= ideia.id %>" method="get">
+                                <button type="submit">Ver solução</button>
+                            </form>
+                            <form action="/ideia/excluir/<%= ideia.id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta ideia?');">
+                                <button type="submit">Excluir</button>
+                            </form>
+                        </td>
+                        
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="6" style="text-align: center;">Nenhum problema finalizado.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+    <br>
+    
+    <a href="/professor/profarea">
+        <button><h3>Voltar</h3></button>
+    </a>
+    
+    <footer style="height: 50px; margin-top: 50px; background-color:rgb(8, 220, 8); text-align: center;">               
+        <div style="padding-top: 15px; color:green;"><b>Criado no IFSul Campus Bagé - Daniel Morales, Prof. Alessandro Dias </b></div>
+    </footer>
+</body>
+</html>

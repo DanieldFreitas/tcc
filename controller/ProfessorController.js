@@ -110,6 +110,82 @@ routerProfessor.post("/professor/finalizarproblemas", async (req, res) => {
     }
 });
 
+// Rota para exibir o histórico de problemas finalizados pelo professor logado
+routerProfessor.get("/professor/historico", async (req, res) => {
+    if (!req.session.professor) return res.redirect("/professor/proflogin");
+    
+    try {
+        let problemasFinalizados = await DAOIdeia.getFinalizadosByProfessor(req.session.professor.id);
+        res.render("professor/historico", { 
+            professor: req.session.professor, 
+            problemasFinalizados 
+        });
+    } catch (err) {
+        console.error("[Erro] Falha ao carregar o histórico:", err);
+        res.render("professor/historico", { 
+            professor: req.session.professor, 
+            mensagem: "Erro ao carregar o histórico.", 
+            problemasFinalizados: [] 
+        });
+    }
+});
+// Rota para listar todos os problemas finalizados
+routerProfessor.get("/professor/solucionados", async (req, res) => {
+    if (!req.session.professor) return res.redirect("/professor/proflogin");
+
+    try {
+        let problemasFinalizados = await DAOIdeia.getFinalizados();
+        console.log(problemasFinalizados);  // Log para verificar se estamos buscando os problemas certos
+        res.render("ideia/solucionados", { 
+            professor: req.session.professor, 
+            problemasFinalizados 
+        });
+
+    } catch (err) {
+        console.error("[Erro] Falha ao carregar problemas finalizados:", err);
+        res.render("professor/solucionados", { 
+            professor: req.session.professor, 
+            mensagem: "Erro ao carregar os problemas finalizados.", 
+            problemasFinalizados: [] 
+        });
+    }
+});
+
+// Rota para exibir a descrição de finalização de um problema
+routerProfessor.get("/professor/versolucao/:id", async (req, res) => {
+    if (!req.session.professor) return res.redirect("/professor/proflogin"); // Verifica se o professor está logado
+
+    try {
+        // Recupera a ideia pelo ID
+        const problema = await DAOIdeia.getById(req.params.id);
+
+        if (!problema) {
+            return res.render("ideia/versolucao", { professor: req.session.professor, mensagem: "Problema não encontrado." });
+        }
+
+        // Verifica se a ideia foi finalizada e tem uma descrição
+        if (problema.status === 'finalizado' && problema.descricaoFinalizacao) {
+            return res.render("ideia/versolucao", { 
+                professor: req.session.professor, 
+                problema,  // Passa o objeto problema para a view
+                descricaoFinalizacao: problema.descricaoFinalizacao
+            });
+        } else {
+            return res.render("ideia/versolucao", { 
+                professor: req.session.professor, 
+                mensagem: "Este problema ainda não foi finalizado ou não possui uma solução descrita."
+            });
+        }
+    } catch (err) {
+        console.error("[Erro] Falha ao carregar a descrição de finalização:", err);
+        res.render("ideia/versolucao", { 
+            professor: req.session.professor, 
+            mensagem: "Erro ao carregar a descrição da solução.",
+            problema: null
+        });
+    }
+});
+
 // Rota para logout do professor
 routerProfessor.get("/professor/logout", (req, res) => {
     req.session.destroy(err => {

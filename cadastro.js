@@ -5,10 +5,10 @@ const bcrypt = require('bcryptjs');  // Para criptografar a senha
 
 async function cadastrarProfessor() {
     // Dados do professor que você quer cadastrar
-    const nome = 'Professor Daniel';
-    const email = 'daniel@professor';
+    const nome = 'Professor Samp';
+    const email = 'samp@professor';
     const senha = '1234';
-    const curso = 'tads'  // A senha que o professor usa no SUAP
+    const curso = 'ega'  // A senha que o professor usa no SUAP
 
     // Criptografando a senha
     const senhaCriptografada = bcrypt.hashSync(senha, 10);

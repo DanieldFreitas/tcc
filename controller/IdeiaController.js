@@ -89,5 +89,23 @@ routerIdeia.post("/ideia/finalizarproblemas/:id", async (req, res) => {
         res.render("professor/finalizarProjeto", { mensagem: "Erro ao finalizar o projeto." });
     }
 });
+// Rota para detalhes de um problema
+routerIdeia.get("/ideia/detalheproblema/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        let problema = await DAOIdeia.getById(id); // Recupera a ideia pelo ID
+
+        if (!problema) {
+            return res.render("ideia/detalheproblema", { mensagem: "Problema não encontrado.", problema: null });
+        }
+
+        // Exibe os detalhes do problema, incluindo a descrição de finalização, se houver
+        res.render("ideia/detalheproblema", { problema, mensagem: "", descricaoFinalizacao: problema.descricaoFinalizacao || "Não foi fornecida descrição de finalização ainda." });
+
+    } catch (err) {
+        console.error(err);
+        res.render("ideia/detalheproblema", { mensagem: "Erro ao carregar os detalhes do problema.", problema: null });
+    }
+});
 
 module.exports = routerIdeia;
