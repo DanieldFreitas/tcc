@@ -17,4 +17,7 @@ const Professor = conexao.define('professores', {
 
 Professor.sync({ force: false });
 
+//Professor.sync({ alter: true });
+
+
 module.exports = Professor;

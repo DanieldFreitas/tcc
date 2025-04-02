@@ -4,133 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IFSul - Finalizar Problema</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: rgb(8, 220, 8);
-            color: green;
-            height: 150px;
-            text-align: center;
-            padding-top: 20px;
-        }
-
-        h1 {
-            margin-top: 0;
-        }
-
-        h3 {
-            font-size: 1.4em;
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .form-container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        table {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        textarea {
-            width: 100%;
-            font-size: 1em;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        button {
-            background-color: rgb(8, 220, 8);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1.2em;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background-color: green;
-        }
-
-        footer {
-            height: 50px;
-            margin-top: 50px;
-            background-color: rgb(8, 220, 8);
-            text-align: center;
-            padding-top: 15px;
-            color: green;
-        }
-
-        footer b {
-            font-size: 1em;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap" rel="stylesheet" />
 </head>
-<body>
-    <header>
-        <h1>CADASTRO DE PROBLEMAS DO IFSUL</h1>
-        <h2>Um banco de propostas para projetos de extensão</h2>
-    </header>
+<body class="d-flex flex-column min-vh-100 bg-light" style="font-family: 'Open Sans', sans-serif;">
 
-    <div class="form-container">
-        <h3>Professor(a) <%= professor.nome %>, descreva abaixo a solução do problema:</h3>
-        <p>Esta solução poderá ser vista por outros professores neste sistema, que poderão adaptá-la para solucionar problemas similares em suas regiões.</p>
-
-        <b>Relato e detalhamento da solução do problema:</b>
-        <br />
-        <form action="/professor/finalizarproblemas" method="POST">
-            <!-- Enviar o ID da ideia -->
-            <input type="hidden" name="idIdeia" value="<%= ideia.id %>">
-
-            <table>
-                <tr>
-                    <td>
-                        <textarea name="descricaoFinalizacao" cols="60" rows="12" maxlength="1000" required></textarea>
-                    </td>
-                    <td>
-                        <div style="margin-left: 20px;">
-                            Por exemplo, descreva:
-                            <ul style="margin-top: 5px;">
-                                <li><b>Onde</b> e <b>quando</b> o problema ocorria</li>
-                                <li><b>Qual</b> era o problema ou <b>como</b> este acontecia</li>
-                                <li><b>Quem</b> eram as pessoas envolvidas/afetadas</li>
-                                <li>Quais eram os prejuízos decorrentes do problema</li>
-                                <li>Quais foram os custos para a solução</li>
-                                <li>Quais foram as lições aprendidas com este projeto</li>
-                                <li>Quais caminhos não deram certo e o porquê</li>
-                            </ul>
-                            <font color="red">(máximo: 1000 caracteres)</font>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-            <br />
-            <button type="submit">Salvar e finalizar este projeto</button>
-        </form>
-
-        <br />
-        <a href="/professor/profArea">
-            <button>Voltar</button>
-        </a>
-        <% if (mensagem) { %>
-            <div style="color: green; font-size: 1.2em; text-align: center;">
-                <%= mensagem %>
-            </div>
-        <% } %>
+    <!-- Inclusão do Navbar -->
+    <%- include('../partials/navbar'); %>
+    <%- include('../partials/header'); %>
+     <!-- Menu Lateral -->
+     <div id="sideNav" class="side-nav">
+        <a href="/professor/profArea">Home</a>
+        <a href="/professor/problemasabertos">Listar Problemas em Aberto</a>
+        <a href="/professor/solucionados">Conhecer Problemas Solucionados</a>
+        <a href="../ideia/cadastroideia">Cadastrar um Problema</a>
+        <a href="historico">Seu Histórico</a>
+        <a href="/professor/logout" class="sair-btn">Sair</a>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- corpo da pagina -->
+    <div class="container mt-5">
+        <h3 class="text-center mb-4">Professor(a), descreva a solução do problema:</h3>
+        <p class="text-center">Esta solução poderá ser vista por outros professores neste sistema, que poderão adaptá-la para solucionar problemas similares em suas regiões.</p>
 
-    <footer>
-        <div><b>Criado no IFSul Campus Bagé - Daniel Morales, Prof. Alessandro Dias</b></div>
-    </footer>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card p-4 shadow-sm">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <form action="/professor/finalizarproblemas" method="POST">
+                                <input type="hidden" name="idIdeia" value="<%= ideia.id %>">
+                                <label for="descricaoFinalizacao" class="fw-bold">Relato e detalhamento da solução do problema:</label>
+                                <textarea id="descricaoFinalizacao" name="descricaoFinalizacao" class="form-control" rows="8" maxlength="1000" required></textarea>
+                                <div class="d-flex justify-content-end mt-3">
+                                    <a href="/professor/profArea" class="btn btn-secondary me-2">Voltar</a>
+                                    <button type="submit" class="btn btn-success">Salvar e finalizar este projeto</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="alert alert-info">
+                                <h6 class="fw-bold">Por exemplo, descreva:</h6>
+                                <ul class="small mb-0">
+                                    <li>Onde e quando o problema ocorria</li>
+                                    <li>Qual era o problema ou como este acontecia</li>
+                                    <li>Quem eram as pessoas envolvidas/afetadas</li>
+                                    <li>Os prejuízos decorrentes do problema</li>
+                                    <li>Os custos para a solução</li>
+                                    <li>As lições aprendidas com este projeto</li>
+                                    <li>Caminhos que não deram certo e o porquê</li>
+                                </ul>
+                                <p class="text-muted small">(máximo: 1000 caracteres)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <br>
+      <!-- Inclusão do Footer -->
+      <%- include('../partials/footer'); %>
 </body>
 </html>

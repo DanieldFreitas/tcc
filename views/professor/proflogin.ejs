@@ -1,63 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IFSul - Cadastro de Problemas</title>
+    <title>IFSul - Login do Professor</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap" rel="stylesheet">
 </head>
-<body>
-    <!-- Cabeçalho -->
-    <header style="background-color: rgb(8, 220, 8); color: green; height: 150px;">
-        <center>                        
-            <h1 style="margin-top: 0px; padding-top: 20px;">CADASTRO DE PROBLEMAS DO IFSUL</h1>                        
-            <h2>Um banco de propostas para projetos de extensão</h2>                        
-        </center>
-    </header>
+<body class="d-flex flex-column min-vh-100 bg-light" style="font-family: 'Open Sans', sans-serif;">
 
-    <center>
-        <h3>Faça seu login:</h3>
+    <!-- Inclusão do Navbar -->
+    <%- include('../partials/navbar'); %>
 
-        <form action="/professor/proflogin" method="POST">
-            <table border="0">
-                <tr>
-                    <td style="width: 200px;">E-mail institucional:</td>
-                    <td><input type="email" id="email" name="email" required></td>
-                </tr>    
-                <tr>
-                    <td><br />Senha do SUAP</td>
-                    <td><input type="password" id="senha" name="senha" required></td>
-                </tr>    
-            </table>
+    <main class="container flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+        <div class="card shadow p-4 w-100" style="max-width: 400px;">
+            <h3 class="text-center text-success fw-bold">Login do Professor</h3>
+            <p class="text-center text-muted">Acesse com seu e-mail institucional</p>
 
-            <br />
-            <button type="submit"><h2>Entrar</h2></button>
-            <br>
-            <br>
-        </form>
-        <center>
-            <a href="/">
-                <button>Voltar</button>
-            </a>
-        </center>
-        <br>
-        <br>
-        <% if(mensagem){ %>
-        <div class="alert alert-danger">
-            <strong>Alerta!</strong> <%= mensagem %>
+            <% if (mensagem) { %>
+                <div class="alert alert-danger text-center">
+                    <strong>Erro:</strong> <%= mensagem %>
+                </div>
+            <% } %>
+
+            <form action="/professor/proflogin" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">E-mail Institucional</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>    
+
+                <div class="mb-3">
+                    <label class="form-label">Senha do SUAP</label>
+                    <input type="password" id="senha" name="senha" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">Entrar</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <a href="/" class="btn btn-outline-secondary">Voltar</a>
+            </div>
         </div>
-        <% } %>
-    </center>
+    </main>
 
-    <br>
-    <br />
-    <br />
-    
-   
-    <!-- Rodapé -->
-    <footer style="height: 50px; margin-top: 50px; background-color:rgb(8, 220, 8); text-align: center;">               
-        <div style="padding-top: 15px; color:green;">
-            <b>Criado no IFSul Campus Bagé - Daniel Morales, Prof. Alessandro Dias</b>
-        </div>
-    </footer>
+    <!-- Inclusão do Footer -->
+    <%- include('../partials/footer'); %>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -3,209 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IFSul - Cadastro de Problemas</title>
-  <style>
-    /* Reseta algumas propriedades do navegador */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
-      line-height: 1.6;
-    }
-    header {
-      background-color: rgb(8, 220, 8);
-      color: green;
-      text-align: center;
-      padding: 30px 0;
-      border-bottom: 5px solid #006600;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-    header h2 {
-      font-size: 1.2rem;
-      margin-top: 0;
-    }
-    .form-container {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    }
-    .form-container h3 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #006600;
-    }
-    .form-container label {
-      font-weight: bold;
-      font-size: 1rem;
-      margin-top: 10px;
-      color: #333;
-    }
-    .form-container input, 
-    .form-container textarea, 
-    .form-container select {
-      width: 100%;
-      padding: 12px;
-      font-size: 1rem;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    }
-    .form-container input[type="text"]:focus, 
-    .form-container input[type="email"]:focus,
-    .form-container textarea:focus {
-      border-color: #006600;
-      outline: none;
-      box-shadow: 0 0 5px rgba(0, 102, 0, 0.5);
-    }
-    .form-container .required {
-      color: red;
-      font-weight: bold;
-    }
-    .form-container button {
-      width: 100%;
-      padding: 15px;
-      font-size: 1.2rem;
-      background-color: rgb(8, 220, 8);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-    .form-container button:hover {
-      background-color: #1c8d1c;
-    }
-    .form-footer {
-      text-align: center;
-      margin-top: 20px;
-    }
-    .form-footer a {
-      text-decoration: none;
-      color: #006600;
-      font-weight: bold;
-      margin: 10px;
-    }
-    footer {
-      background-color: rgb(8, 220, 8);
-      color: green;
-      text-align: center;
-      padding: 15px;
-      margin-top: 20px;
-    }
-    footer p {
-      font-size: 0.9rem;
-    }
-    .section-title {
-      font-size: 1.5rem;
-      color: #006600;
-      margin-bottom: 15px;
-    }
-    textarea {
-      resize: vertical;
-    }
-  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
 
-<header>
-  <center>
-    <h1 style="margin-top: 0; padding-top: 20px;">CADASTRO DE PROBLEMAS DO IFSUL</h1>
-    <h2>Um banco de propostas para projetos de extensão</h2>
-  </center>
-</header>
-
-<br />
-<center>
-  <h3>Por favor, informe os dados abaixo para cadastrar o problema:</h3>
-</center>
-
-<div class="form-container">
-  <h3>Sobre o problema</h3>
-  <form action="/ideia/atualizar/<%= (typeof ideia !== 'undefined' && ideia.id) ? ideia.id : '' %>" method="POST">
-    <label for="titulo">Descreva abaixo o problema em poucas palavras: <span class="required">*</span></label>
-    <input type="text" id="titulo" name="titulo" value="<%= (typeof ideia !== 'undefined' && ideia.titulo) ? ideia.titulo : '' %>" required>
-
-    <label for="detalhes">Descreva abaixo o problema em detalhes: <span class="required">*</span></label>
-    <textarea id="detalhes" name="detalhes" required><%= (typeof ideia !== 'undefined' && ideia.detalhes) ? ideia.detalhes : '' %></textarea>
-
-    <label for="causa">Suspeita da causa do problema, se tiver:</label>
-    <input type="text" id="causa" name="causa" value="<%= (typeof ideia !== 'undefined' && ideia.causa) ? ideia.causa : '' %>">
-
-    <label for="frequencia">Frequência da ocorrência, se souber:</label>
-    <input type="text" id="frequencia" name="frequencia" value="<%= (typeof ideia !== 'undefined' && ideia.frequencia) ? ideia.frequencia : '' %>">
-
-    <label for="prazo">Prazo máximo necessário para a solução, se tiver: <span class="required">*</span></label>
-    <input type="date" id="prazo" name="prazo" value="<%= (typeof ideia !== 'undefined' && ideia.prazo) ? ideia.prazo : '' %>" required>
-
-    <label for="tipo_projeto">Qual tipo de projeto de extensão você acha que seria útil para resolveria este problema? <span class="required">*</span></label>
-    <select id="tipo_projeto" name="tipo_projeto" required>
-      <option value="consultoria" <%= (typeof ideia !== 'undefined' && ideia.tipo_projeto === 'consultoria') ? 'selected' : '' %>>receber uma consultoria técnica em minha comunidade ou empresa</option>
-      <option value="curso" <%= (typeof ideia !== 'undefined' && ideia.tipo_projeto === 'curso') ? 'selected' : '' %>>receber um curso (de curta duração)</option>
-      <option value="evento" <%= (typeof ideia !== 'undefined' && ideia.tipo_projeto === 'evento') ? 'selected' : '' %>>receber um evento de palestras e/ou minicursos</option>
-      <option value="novo_produto" <%= (typeof ideia !== 'undefined' && ideia.tipo_projeto === 'novo_produto') ? 'selected' : '' %>>um projeto para criar um novo produto/serviço</option>
-      <option value="melhoria" <%= (typeof ideia !== 'undefined' && ideia.tipo_projeto === 'melhoria') ? 'selected' : '' %>>um projeto para melhorar um produto/serviço existente</option>
-      <option value="resultado" <%= (typeof ideia !== 'undefined' && ideia.tipo_projeto === 'resultado') ? 'selected' : '' %>>um projeto para gerar um resultado (ex. diminuir evasão escolar)</option>
-      <option value="nao_sabe" <%= (typeof ideia !== 'undefined' && ideia.tipo_projeto === 'nao_sabe') ? 'selected' : '' %>>não sei informar ou qual destes seria melhor</option>
-    </select>
-
-    <label for="curso_sugerido">Qual curso você acha que talvez possa solucionar este problema? <span class="required">*</span></label>
-    <select id="curso_sugerido" name="curso_sugerido" required>
-      <option value="tads" <%= (typeof ideia !== 'undefined' && ideia.curso_sugerido === 'tads') ? 'selected' : '' %>>Análise e Desenvolvimento de Sistemas</option>
-      <option value="ega" <%= (typeof ideia !== 'undefined' && ideia.curso_sugerido === 'ega') ? 'selected' : '' %>>Engenharia Agronômica</option>
-      <option value="fpgl" <%= (typeof ideia !== 'undefined' && ideia.curso_sugerido === 'fpgl') ? 'selected' : '' %>>Formação Pedagógica para Graduados não Licenciados</option>
-      <option value="ta" <%= (typeof ideia !== 'undefined' && ideia.curso_sugerido === 'ta') ? 'selected' : '' %>>Tecnologia em Alimentos</option>
-    </select>
-
-    <h3 class="section-title">Dados de Contato</h3>
-    <p>O professor(a) que for criar um projeto de extensão para tratar este programa poderá entrar em contato com você para obter detalhes e/ou tirar dúvidas.</p>
-
-    <label for="nome">Nome Completo: <span class="required">*</span></label>
-    <input type="text" id="nome" name="nome" value="<%= (typeof ideia !== 'undefined' && ideia.nome) ? ideia.nome : '' %>">
-
-    <label for="telefone">Telefone: <span class="required">*</span></label>
-    <input type="text" id="telefone" name="telefone" value="<%= (typeof ideia !== 'undefined' && ideia.telefone) ? ideia.telefone : '' %>">
-
-    <label for="email">Email: <span class="required">*</span></label>
-    <input type="email" id="email" name="email" value="<%= (typeof ideia !== 'undefined' && ideia.email) ? ideia.email : '' %>">
-
-    <label for="cidade">Cidade: <span class="required">*</span></label>
-    <select id="cidade" name="cidade" required>
-      <option value="bage" <%= (typeof ideia !== 'undefined' && ideia.cidade === 'bage') ? 'selected' : '' %>>Bagé</option>
-      <option value="pelotas" <%= (typeof ideia !== 'undefined' && ideia.cidade === 'pelotas') ? 'selected' : '' %>>Pelotas</option>
-      <option value="candiota" <%= (typeof ideia !== 'undefined' && ideia.cidade === 'candiota') ? 'selected' : '' %>>Candiota</option>
-      <option value="hulha_negra" <%= (typeof ideia !== 'undefined' && ideia.cidade === 'hulha_negra') ? 'selected' : '' %>>Hulha Negra</option>
-      <option value="dom_pedrito" <%= (typeof ideia !== 'undefined' && ideia.cidade === 'dom_pedrito') ? 'selected' : '' %>>Dom Pedrito</option>
-      <option value="acegua" <%= (typeof ideia !== 'undefined' && ideia.cidade === 'acegua') ? 'selected' : '' %>>Acegua</option>
-      <option value="santana" <%= (typeof ideia !== 'undefined' && ideia.cidade === 'santana') ? 'selected' : '' %>>Santana do Livramento</option>
-    </select>
-
-    <button type="submit">Atualizar</button>
-  </form>
+<body class="bg-light" style="font-family: 'Open Sans', sans-serif;">
+  <%- include('../partials/navbar'); %>
+  <%- include('../partials/header'); %>
+   <!-- Menu Lateral -->
+   <div id="sideNav" class="side-nav">
+    <a href="/professor/profArea">Home</a>
+    <a href="/professor/problemasabertos">Listar Problemas em Aberto</a>
+    <a href="/professor/solucionados">Conhecer Problemas Solucionados</a>
+    <a href="/ideia/cadastroideia">Cadastrar um Problema</a>
+    <a href="/professor/historico">Seu Histórico</a>
+    <a href="/professor/logout" class="sair-btn">Sair</a>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-<center>
-  <font color="red"><b>* Campo de preenchimento obrigatório</b></font>
-</center>
+<!--conteudo principal-->
 
-<div class="form-footer">
-  <a href="/professor/profArea">Voltar</a>
-</div>
+<div class="container mt-5">
+  <div class="container d-flex flex-column align-items-center justify-content-center min-vh-100">
+    <h3 class="text-center">Editar dados do problema:</h3>
 
-<footer>
-  <p>Criado no IFSul Campus Bagé - Daniel Morales, Prof. Alessandro Dias</p>
-</footer>
+    <form action="/ideia/atualizar/<%= ideia.id %>" method="POST" class="w-100">
+      <fieldset class="w-100 p-3 border rounded shadow-sm bg-white">
+        <legend class="fw-bold">Sobre o problema:</legend>
 
+        <label class="fw-semibold">Descreva abaixo o problema em poucas palavras:</label>
+        <input type="text" name="titulo" class="form-control" value="<%= ideia.titulo %>" required>
+
+        <label class="fw-semibold mt-2">Descreva abaixo o problema em detalhes:</label>
+        <textarea name="detalhes" class="form-control" rows="4" required><%= ideia.detalhes %></textarea>
+
+        <label class="fw-semibold mt-2">Suspeita da causa do problema, se tiver:</label>
+        <input type="text" name="causa" class="form-control" value="<%= ideia.causa %>">
+
+        <label class="fw-semibold mt-2">Frequência da ocorrência, se souber:</label>
+        <input type="text" name="frequencia" class="form-control" value="<%= ideia.frequencia %>">
+
+        <label class="fw-semibold mt-2">Prazo máximo necessário para a solução:</label>
+        <input type="date" name="prazo" class="form-control" value="<%= ideia.prazo %>">
+
+        <label class="fw-semibold mt-2">Tipo de projeto de extensão:</label>
+        <select name="tipo_projeto" class="form-select">
+          <option value="consultoria" <%= ideia.tipo_projeto === 'consultoria' ? 'selected' : '' %>>Consultoria técnica</option>
+          <option value="curso" <%= ideia.tipo_projeto === 'curso' ? 'selected' : '' %>>Curso (curta duração)</option>
+          <option value="evento" <%= ideia.tipo_projeto === 'evento' ? 'selected' : '' %>>Evento de palestras/minicursos</option>
+          <option value="novo_produto" <%= ideia.tipo_projeto === 'novo_produto' ? 'selected' : '' %>>Novo produto/serviço</option>
+          <option value="melhoria" <%= ideia.tipo_projeto === 'melhoria' ? 'selected' : '' %>>Melhoria de produto/serviço</option>
+          <option value="resultado" <%= ideia.tipo_projeto === 'resultado' ? 'selected' : '' %>>Resultado (ex. redução evasão escolar)</option>
+          <option value="nao_sabe" <%= ideia.tipo_projeto === 'nao_sabe' ? 'selected' : '' %>>Não sei</option>
+        </select>
+
+        <label class="fw-semibold mt-2">Curso sugerido para resolver o problema:</label>
+        <select name="curso_sugerido" class="form-select">
+          <option value="tads" <%= ideia.curso_sugerido === 'tads' ? 'selected' : '' %>>Análise e Desenvolvimento de Sistemas</option>
+          <option value="ega" <%= ideia.curso_sugerido === 'ega' ? 'selected' : '' %>>Engenharia Agronômica</option>
+          <option value="fpgl" <%= ideia.curso_sugerido === 'fpgl' ? 'selected' : '' %>>Formação Pedagógica</option>
+          <option value="ta" <%= ideia.curso_sugerido === 'ta' ? 'selected' : '' %>>Tecnologia em Alimentos</option>
+        </select>
+      </fieldset>
+
+      <br>
+
+      <fieldset class="w-100 p-3 border rounded shadow-sm bg-white">
+        <legend class="fw-bold">Dados para contato:</legend>
+
+        <label class="fw-semibold">Nome Completo:</label>
+        <input type="text" name="nome" class="form-control" value="<%= ideia.nome %>" required>
+
+        <label class="fw-semibold mt-2">Telefone:</label>
+        <input type="text" name="telefone" class="form-control" value="<%= ideia.telefone %>" required>
+
+        <label class="fw-semibold mt-2">Email:</label>
+        <input type="email" name="email" class="form-control" value="<%= ideia.email %>" required>
+
+        <label class="fw-semibold mt-2">Cidade:</label>
+        <select name="cidade" class="form-select">
+          <option value="bage" <%= ideia.cidade === 'bage' ? 'selected' : '' %>>Bagé</option>
+          <option value="pelotas" <%= ideia.cidade === 'pelotas' ? 'selected' : '' %>>Pelotas</option>
+          <option value="candiota" <%= ideia.cidade === 'candiota' ? 'selected' : '' %>>Candiota</option>
+          <option value="hulha_negra" <%= ideia.cidade === 'hulha_negra' ? 'selected' : '' %>>Hulha Negra</option>
+          <option value="dom_pedrito" <%= ideia.cidade === 'dom_pedrito' ? 'selected' : '' %>>Dom Pedrito</option>
+        </select>
+      </fieldset>
+
+      <div class="mt-4 d-flex gap-3 justify-content-center">
+        <a href="/professor/detalheproblema/<%= ideia.id %>" class="btn btn-secondary">Voltar</a>
+        <button type="submit" class="btn btn-success">Atualizar</button>
+    </div>
+    
+    </form>
+    </div>
+  </div><br>
+
+  <%- include('../partials/footer'); %>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

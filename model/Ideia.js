@@ -9,7 +9,7 @@ const Ideia = conexao.define('ideias', {
         autoIncrement: true
     },
     titulo: Sequelize.STRING,
-    detalhes: Sequelize.STRING,
+    detalhes: Sequelize.TEXT,
     causa: Sequelize.STRING,
     frequencia: Sequelize.STRING,
     prazo: Sequelize.DATEONLY,
@@ -48,5 +48,8 @@ Ideia.belongsTo(Professor, { foreignKey: 'professorId', as: 'professor' });
 
 
 Ideia.sync({ force: false });
+
+//Ideia.sync({ alter: true });
+
 
 module.exports = Ideia;

@@ -4,113 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IFSul - Cadastro de Problemas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap" rel="stylesheet" />
 </head>
-<body>
-    <header style="background-color: rgb(8, 220, 8); color: green; height: 150px;">
-        <center>
-            <h1 style="margin-top: 0px; padding-top: 20px;">CADASTRO DE PROBLEMAS DO IFSUL</h1>
-            <h2>Um banco de propostas para projetos de extensão</h2>
-        </center>
-        <style>
-            .container {
-                display: flex;
-                justify-content: center; /* Alinha os itens no centro horizontalmente */
-                align-items: center; /* Alinha os itens no centro verticalmente */
-                gap: 40px; /* Adiciona uma separação de 40px entre as divs */
-                height: 120px;
-            }
+<body class="d-flex flex-column min-vh-100 bg-light" style="font-family: 'Open Sans', sans-serif;">
 
-            .box {
-                flex: 1; /* As divs irão ocupar o mesmo espaço */
-                padding: 10px;
-                border: 0px;
-                margin: 5px;
-            }
-        </style>
-    </header>
+    <!-- Inclusão do Navbar -->
+    <%- include('../partials/navbar'); %>
+    <%- include('../partials/header'); %>
+    <!-- Menu Lateral -->
+    <div id="sideNav" class="side-nav">
+        <a href="/professor/profArea">Home</a>
+        <a href="/professor/problemasabertos">Listar Problemas em Aberto</a>
+        <a href="/professor/solucionados">Conhecer Problemas Solucionados</a>
+        <a href="/ideia/cadastroideia">Cadastrar um Problema</a>
+        <a href="/professor/historico">Seu Histórico</a>
+        <a href="/professor/logout" class="sair-btn">Sair</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <center>
-        <h2>Bem-vindo, <%= professor.nome %>!</h2>
-    </center>
-
-    <br />
-    <h3>Dados do problema informados pela pessoa ou empresa: </h3>
-
-    <fieldset>
-        <legend>Sobre o problema:</legend>
-        <form>
-            <br />
-            <label>Descreva abaixo o problema em poucas palavras:</label>
-            <br> 
-            <p><%= problema.titulo %></p>
-            <br>
-
-            <br />
-            <table border="0">
-                <tr>
-                    <td style="vertical-align: top; width: 450px;">
-                        <label>Descreva abaixo o problema em detalhes: <font color="red"><b>*</b></font> </label>
-                        <p><%= problema.detalhes %></p>
-                    </td>
-                </tr>
-            </table>                             
-            <br />
-            <label>Suspeita da causa do problema, se tiver:</label>
-            <br> 
-            <p><%= problema.causa %></p>
-            <br>
-
-            <br />
-            <label>Frequência da ocorrência, se souber:</label><br>
-            <p><%= problema.frequencia %></p>
-            <br>
-
-            <br />
-            <label>Prazo máximo necessário para a solução, se tiver:</label>
-            <br>
-            <p><%= problema.prazo || "Não informado" %></p>
-            <br>
-
-            <br>
-            <label>Qual tipo de projeto de extensão você acha que seria útil para resolveria este problema?<font color="red"><b>*</b></font></label><br>
-            <p><%= problema.tipo_projeto %></p>
-
-            <br>
-            <br>
-            <label>Qual curso você acha que talvez possa solucionar este problema?<font color="red"><b>*</b></font></label><br>
-            <p><%= problema.curso_sugerido %></p>
-        </form>
-        <br />
-    </fieldset>
-
-    <br />
-
-    <fieldset>
-        <legend>Dados para contato:</legend>
-
-        <p>O professor(a) que for criar um projeto de extensão para tratar este problema poderá entrar em contato com você para obter detalhes e/ou tirar dúvidas.</p>   
-        <form>
-            <p><strong>Nome:</strong> <%= problema.nome %></p>
-            <p><strong>Telefone</strong> <%= problema.telefone %></p>
-            <p><strong>Email:</strong> <%= problema.email %></p>
-            <p><strong>Cidade:</strong> <%= problema.cidade %></p>
-        </form>
-    </fieldset>
-
-    <a href="/professor/profArea">
-        <button>Voltar</button>
+    <!-- conteudo principal -->
+    <div class="container mt-5">
+    <div class="container d-flex flex-column align-items-center justify-content-center min-vh-100">
+        <h3 class="text-center">Dados do problema informados pela pessoa ou empresa:</h3>
     
-    <a href="/ideia/editarproblema/<%= problema.id %>">
-            <button type="button">Editar</button>
-    </a>
-        
-    <!-- Formulário de Exclusão -->
-    <form action="/ideia/excluir/<%= problema.id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta ideia?');">
-        <button type="submit">Excluir</button>
-    </form>
-
-    <footer style="height: 50px; margin-top: 50px; background-color:rgb(8, 220, 8); text-align: center;">                
-        <div style="padding-top: 15px; color:green;"><b>Criado no IFSul Campus Bagé - Daniel Morales, Prof. Alessandro Dias</b></div>
-    </footer>
+        <fieldset class="w-100 p-3 border rounded shadow-sm bg-white">
+            <legend class="fw-bold">Sobre o problema:</legend>
+            <form>
+                <label class="fw-semibold">Descreva abaixo o problema em poucas palavras:</label>
+                <p class="text-muted"><%= problema.titulo %></p>
+                
+                <label class="fw-semibold">Descreva abaixo o problema em detalhes: <span class="text-danger">*</span></label>
+                <p class="text-muted"><%= problema.detalhes %></p>
+    
+                <label class="fw-semibold">Suspeita da causa do problema, se tiver:</label>
+                <p class="text-muted"><%= problema.causa %></p>
+    
+                <label class="fw-semibold">Frequência da ocorrência, se souber:</label>
+                <p class="text-muted"><%= problema.frequencia %></p>
+    
+                <label class="fw-semibold">Prazo máximo necessário para a solução, se tiver:</label>
+                <p class="text-muted"><%= problema.prazo || "Não informado" %></p>
+    
+                <label class="fw-semibold">Qual tipo de projeto de extensão você acha que seria útil para resolver este problema? <span class="text-danger">*</span></label>
+                <p class="text-muted"><%= problema.tipo_projeto %></p>
+    
+                <label class="fw-semibold">Qual curso você acha que talvez possa solucionar este problema? <span class="text-danger">*</span></label>
+                <p class="text-muted"><%= problema.curso_sugerido %></p>
+            </form>
+        </fieldset>
+    
+        <br />
+    
+        <fieldset class="w-100 p-3 border rounded shadow-sm bg-white">
+            <legend class="fw-bold">Dados para contato:</legend>
+            <p class="text-muted">O professor(a) que for criar um projeto de extensão para tratar este problema poderá entrar em contato com você para obter detalhes e/ou tirar dúvidas.</p>
+            <form>
+                <p><strong>Nome:</strong> <%= problema.nome %></p>
+                <p><strong>Telefone:</strong> <%= problema.telefone %></p>
+                <p><strong>Email:</strong> <%= problema.email %></p>
+                <p><strong>Cidade:</strong> <%= problema.cidade %></p>
+            </form>
+        </fieldset>
+    
+        <div class="mt-4 d-flex gap-3">
+            <button class="btn btn-secondary" onclick="history.go(-1)">Voltar</button>
+            <a href="/ideia/editarproblema/<%= problema.id %>" class="btn btn-primary">Editar</a>
+            <form action="/ideia/excluir/<%= problema.id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta ideia?');">
+                <button type="submit" class="btn btn-danger">Excluir</button>
+            </form>
+        </div>
+    </div> 
+    </div><br>
+    
+    <!-- Inclusão do Footer -->
+    <%- include('../partials/footer'); %>
 </body>
 </html>

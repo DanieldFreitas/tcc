@@ -19,7 +19,15 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // Configuração de sessão
-app.use(session({ secret: "Um%55kjds", resave: true, saveUninitialized: true }));
+app.use(session({ secret: "Um%55kjds", 
+                  resave: true,     
+                  saveUninitialized: true,
+                  cookie: {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production', // Verifique se está em ambiente seguro
+                    maxAge: 1000 * 60 * 60 // A sessão expira após 1 hora
+                }
+ }));
 
 // Rotas
 app.use(homeController);
@@ -31,6 +39,8 @@ conexao.authenticate()
     .then(() => console.log("Conectado ao banco de dados!"))
     .catch(err => console.error("Erro ao conectar no banco:", err));
 
-app.listen(3000, () => {
-    console.log('🚀 Aplicação rodando na porta 3000...');
-});
+    
+app.listen(3000, '0.0.0.0', () => {
+    console.log('Servidor rodando na porta 3000');
+    });
+      

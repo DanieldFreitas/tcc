@@ -1,7 +1,109 @@
 <!-- Cabeçalho -->
-<header style="background-color: rgb(8, 220, 8); color: green; height: 150px;">
-    <center>                         
-        <h1 style="margin-top: 0px; padding-top: 20px;">CADASTRO DE PROBLEMAS DO IFSUL</h1>                         
-        <h2>Um banco de propostas para projetos de extensão</h2>                         
-    </center>
+<header>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+   
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap" rel="stylesheet">
+    <style>
+        /* Barra de fundo cinza para a área do menu e nome do professor */
+        .menu-bar {
+            background-color: #dcdcdc; /* Cinza */
+            padding: 10px 20px;
+        }
+
+        /* Menu lateral com degradê */
+        .side-nav {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background: linear-gradient(to bottom, #28a745, #1e7e34); /* Degradê verde */
+            transition: left 0.3s;
+            padding-top: 30px;
+            z-index: 9999;
+        }
+
+        .side-nav a, .side-nav button {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #fff;
+            display: block;
+            background-color: #6c757d; /* Cinza */
+            border: none;
+            text-align: left;
+            border-radius: 5px;
+            margin: 10px 15px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .side-nav a:hover, .side-nav button:hover {
+            background-color: #5a6268; /* Tom mais escuro de cinza */
+            transform: scale(1.05);
+        }
+
+        .side-nav a.sair-btn {
+            background-color: #dc3545; /* Vermelho para o botão sair */
+        }
+
+        .side-nav a.sair-btn:hover {
+            background-color: #c82333; /* Tom mais escuro de vermelho */
+        }
+
+        .side-nav.active {
+            left: 0;
+        }
+
+        /* Nome do professor à direita */
+        .professor-name {
+            font-weight: bold;
+            color: #4b4b4b;
+            display: flex;
+            align-items: center;
+        }
+
+        .professor-name i {
+            margin-right: 10px; /* Ícone do check */
+            font-size: 20px; /* Ajustar o tamanho do ícone */
+        }
+
+        .menu-toggle {
+            font-size: 30px;
+            cursor: pointer;
+            color: #000;
+        }
+    </style> 
+     <!-- Barra com o menu e o nome do professor -->
+   <div class="menu-bar d-flex justify-content-between align-items-center">
+       <span class="menu-toggle" onclick="toggleMenu()">&#9776;</span> <!-- Ícone do menu hamburguer -->
+       <h4 class="professor-name ms-auto"><i class="bi bi-file-person-fill"></i><%= professor.nome %></h4> <!-- Ícone do check e nome do professor -->
+   </div>
+   
+   <script>
+       function toggleMenu() {
+           const sideNav = document.getElementById("sideNav");
+           sideNav.classList.toggle("active");
+       }
+
+       document.addEventListener('click', function(event) {
+           if (!event.target.closest('#sideNav') && !event.target.closest('.menu-toggle')) {
+               document.getElementById('sideNav').classList.remove('active');
+           }
+       });
+
+       var successVal = <%= JSON.stringify(typeof success !== 'undefined' ? success : false) %>;
+       document.addEventListener('DOMContentLoaded', function() {
+           if (successVal === true || successVal === "true") {
+               var toastEl = document.querySelector('.toast');
+               if (toastEl) {
+                   var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+                   toast.show();
+               }
+           }
+       });
+   </script>
 </header>

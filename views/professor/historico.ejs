@@ -1,66 +1,119 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Histórico de Problemas Finalizados</title>
-</head>
-<body>
-    <header style="background-color: rgb(8, 220, 8); color: green; height: 150px;">
-        <center>                        
-            <h1 style="margin-top: 0px; padding-top: 20px;">HISTÓRICO DE PROBLEMAS FINALIZADOS</h1>                        
-            <h2>Lista de problemas solucionados pelo professor</h2>                        
-        </center>
-    </header>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Problemas Solucionados</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-light" style="font-family: 'Open Sans', sans-serif;">
+        <%- include('../partials/navbar'); %>
+        <%- include('../partials/header'); %>
     
-    <h2>Seus problemas já solucionados:</h2>
+        <div id="sideNav" class="side-nav">
+            <a href="/professor/profArea">Home</a>
+            <a href="/professor/problemasabertos">Listar Problemas em Aberto</a>
+            <a href="/professor/solucionados">Conhecer Problemas Solucionados</a>
+            <a href="/ideia/cadastroideia">Cadastrar um Problema</a>
+            <a href="/professor/historico">Seu Histórico</a>
+            <a href="/professor/logout" class="sair-btn">Sair</a>
+        </div>
+    
+        <div class="container mt-5">
+            <h4 class="mt-5 text-success fw-bold">Histórico de Problemas Finalizados</h4>
+            <h5 class="mb-4">Lista de problemas solucionados pelo professor</h5>
 
-    <table border="1" width="100%">
-        <thead>
-            <tr style="height: 40px;">
-                <th>Cidade</th>
-                <th>Curso que solucionou</th>
-                <th>Descrição do Problema</th>
-                <th>Suspeita da Causa</th>
-                <th>Data de Finalização</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% if (problemasFinalizados.length > 0) { %>
-                <% problemasFinalizados.forEach(ideia => { %>
-                    <tr style="height: 60px;">
-                        <td><%= ideia.cidade %></td>
-                        <td><%= ideia.curso_sugerido %></td>
-                        <td><%= ideia.titulo %></td>
-                        <td><%= ideia.causa %></td>
-                        <td><%= ideia.updatedAt.toLocaleDateString() %></td>
-                        <td style="text-align: center;">
-                            <form action="/professor/versolucao/<%= ideia.id %>" method="get">
-                                <button type="submit">Ver solução</button>
-                            </form>
-                            <form action="/ideia/excluir/<%= ideia.id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta ideia?');">
-                                <button type="submit">Excluir</button>
-                            </form>
-                        </td>
-                        
-                    </tr>
-                <% }); %>
-            <% } else { %>
-                <tr>
-                    <td colspan="6" style="text-align: center;">Nenhum problema finalizado.</td>
-                </tr>
-            <% } %>
-        </tbody>
-    </table>
-    <br>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="filtroCidade" class="form-label">Filtrar por Cidade:</label>
+                    <select id="filtroCidade" class="form-select" onchange="filtrarTabela()">
+                        <option value="">Todas as Cidades</option>
+                        <option value="candiota">Candiota</option>
+                        <option value="bage">Bagé</option>
+                        <option value="dom_pedrito">Dom Pedrito</option>
+                        <option value="hulha_negra">Hulha Negra</option>
+                        <option value="pelotas">Pelotas</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="filtroData" class="form-label">Ordenar por Data:</label>
+                    <select id="filtroData" class="form-select" onchange="ordenarTabela()">
+                        <option value="recente">Mais Recente</option>
+                        <option value="antiga">Mais Antiga</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-success">
+                        <tr>
+                            <th class="text-center" style="width: 12%">Cidade</th>
+                            <th class="text-center" style="width: 12%">Curso</th>
+                            <th class="text-center" style="width: 22%">Descrição do Problema</th>
+                            <th class="text-center" style="width: 20%">Suspeita da Causa</th>
+                            <th class="text-center" style="width: 14%">Data de Finalização</th>
+                            <th class="text-center" style="width: 20%">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaProblemas">
+                        <% if (problemasFinalizados.length > 0) { %>
+                            <% problemasFinalizados.forEach(ideia => { %>
+                                <tr>
+                                    <td class="text-center cidade"><%= ideia.cidade %></td>
+                                    <td class="text-center text-truncate" style="max-width: 120px;"><%= ideia.curso_sugerido %></td>
+                                    <td class="text-truncate" style="max-width: 220px;"><%= ideia.titulo %></td>
+                                    <td class="text-truncate" style="max-width: 200px;"><%= ideia.causa %></td>
+                                    <td class="text-center data-finalizacao" data-iso="<%= ideia.updatedAt.toISOString() %>">
+                                        <%= ideia.updatedAt.toLocaleDateString() %>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <div class="d-flex flex-column align-items-center gap-2" style="width: 100%;">
+                                            <a href="/professor/versolucao/<%= ideia.id %>" class="btn btn-outline-success btn-sm w-100">Ver Solução</a>
+                                            <a href="/professor/detalheProblema/<%= ideia.id %>" class="btn btn-outline-primary btn-sm w-100">Ver Detalhes</a>
+                                            <form action="/ideia/excluir/<%= ideia.id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta ideia?');">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm w-100">Excluir</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="6" class="text-center">Nenhum problema finalizado.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div><br>
+        
+        <%- include('../partials/footer'); %>
+        
+        <script>
+            function filtrarTabela() {
+                let filtroCidade = document.getElementById("filtroCidade").value.toLowerCase();
+                let linhas = document.querySelectorAll("#tabelaProblemas tr");
     
-    <a href="/professor/profarea">
-        <button><h3>Voltar</h3></button>
-    </a>
+                linhas.forEach(linha => {
+                    let cidade = linha.querySelector(".cidade").textContent.toLowerCase();
+                    linha.style.display = filtroCidade === "" || cidade.includes(filtroCidade) ? "" : "none";
+                });
+            }
     
-    <footer style="height: 50px; margin-top: 50px; background-color:rgb(8, 220, 8); text-align: center;">               
-        <div style="padding-top: 15px; color:green;"><b>Criado no IFSul Campus Bagé - Daniel Morales, Prof. Alessandro Dias </b></div>
-    </footer>
-</body>
+            function ordenarTabela() {
+                let filtroData = document.getElementById("filtroData").value;
+                let tbody = document.getElementById("tabelaProblemas");
+                let linhas = Array.from(tbody.querySelectorAll("tr"));
+                
+                linhas.sort((a, b) => {
+                    let dataA = new Date(a.querySelector(".data-finalizacao").getAttribute("data-iso"));
+                    let dataB = new Date(b.querySelector(".data-finalizacao").getAttribute("data-iso"));
+                    return filtroData === "recente" ? dataB - dataA : dataA - dataB;
+                });
+    
+                linhas.forEach(linha => tbody.appendChild(linha));
+            }
+        </script>
+    </body>
 </html>
